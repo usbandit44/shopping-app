@@ -10,66 +10,132 @@
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
-import { Route as IndexImport } from "./routes/index";
+import { Route as rootRoute } from './routes/__root'
+import { Route as SignupImport } from './routes/signup'
+import { Route as ApplicationImport } from './routes/_application'
+import { Route as IndexImport } from './routes/index'
+import { Route as ApplicationDiscoverImport } from './routes/_application.discover'
 
 // Create/Update Routes
 
-const IndexRoute = IndexImport.update({
-  id: "/",
-  path: "/",
+const SignupRoute = SignupImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
+
+const ApplicationRoute = ApplicationImport.update({
+  id: '/_application',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const IndexRoute = IndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ApplicationDiscoverRoute = ApplicationDiscoverImport.update({
+  id: '/discover',
+  path: '/discover',
+  getParentRoute: () => ApplicationRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexImport;
-      parentRoute: typeof rootRoute;
-    };
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/_application': {
+      id: '/_application'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof ApplicationImport
+      parentRoute: typeof rootRoute
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupImport
+      parentRoute: typeof rootRoute
+    }
+    '/_application/discover': {
+      id: '/_application/discover'
+      path: '/discover'
+      fullPath: '/discover'
+      preLoaderRoute: typeof ApplicationDiscoverImport
+      parentRoute: typeof ApplicationImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface ApplicationRouteChildren {
+  ApplicationDiscoverRoute: typeof ApplicationDiscoverRoute
+}
+
+const ApplicationRouteChildren: ApplicationRouteChildren = {
+  ApplicationDiscoverRoute: ApplicationDiscoverRoute,
+}
+
+const ApplicationRouteWithChildren = ApplicationRoute._addFileChildren(
+  ApplicationRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
+  '/': typeof IndexRoute
+  '': typeof ApplicationRouteWithChildren
+  '/signup': typeof SignupRoute
+  '/discover': typeof ApplicationDiscoverRoute
 }
 
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
+  '/': typeof IndexRoute
+  '': typeof ApplicationRouteWithChildren
+  '/signup': typeof SignupRoute
+  '/discover': typeof ApplicationDiscoverRoute
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute;
-  "/": typeof IndexRoute;
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/_application': typeof ApplicationRouteWithChildren
+  '/signup': typeof SignupRoute
+  '/_application/discover': typeof ApplicationDiscoverRoute
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/";
-  id: "__root__" | "/";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '' | '/signup' | '/discover'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '' | '/signup' | '/discover'
+  id: '__root__' | '/' | '/_application' | '/signup' | '/_application/discover'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
+  IndexRoute: typeof IndexRoute
+  ApplicationRoute: typeof ApplicationRouteWithChildren
+  SignupRoute: typeof SignupRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-};
+  ApplicationRoute: ApplicationRouteWithChildren,
+  SignupRoute: SignupRoute,
+}
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
 /* prettier-ignore-end */
 
@@ -79,11 +145,26 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/_application",
+        "/signup"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/_application": {
+      "filePath": "_application.tsx",
+      "children": [
+        "/_application/discover"
+      ]
+    },
+    "/signup": {
+      "filePath": "signup.tsx"
+    },
+    "/_application/discover": {
+      "filePath": "_application.discover.tsx",
+      "parent": "/_application"
     }
   }
 }

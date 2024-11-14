@@ -23,8 +23,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@tanstack/react-router";
 
 const SignUp = () => {
+  const navigate = useNavigate({ from: "/signup" });
+
+  function handle_signin_click() {
+    navigate({ to: "/" });
+  }
+
   const form = useForm<z.infer<typeof signup_form>>({
     resolver: zodResolver(signup_form),
     defaultValues: {
@@ -142,7 +149,11 @@ const SignUp = () => {
               )}
             />
             <div className="flex justify-between">
-              <Button variant="link" className="px-0">
+              <Button
+                variant="link"
+                className="px-0"
+                onClick={handle_signin_click}
+              >
                 Sign In Here
               </Button>
               <Button type="submit">Sign Up</Button>

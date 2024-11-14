@@ -23,8 +23,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@tanstack/react-router";
 
 const SignIn = () => {
+  const navigate = useNavigate({ from: "/" });
+
+  function handle_signup_click() {
+    navigate({ to: "/signup" });
+  }
   const form = useForm<z.infer<typeof signin_form>>({
     resolver: zodResolver(signin_form),
     defaultValues: {
@@ -35,6 +41,7 @@ const SignIn = () => {
 
   function onSubmit(values: z.infer<typeof signin_form>) {
     console.log(values);
+    navigate({ to: "/discover" });
   }
 
   return (
@@ -70,20 +77,25 @@ const SignIn = () => {
                       className="h-12 text-base"
                       placeholder="Password"
                       {...field}
+                      type="password"
                     />
                   </FormControl>
                 </FormItem>
               )}
             />
+            <div className="flex justify-between">
+              <Button
+                variant="link"
+                className="px-0"
+                onClick={handle_signup_click}
+              >
+                Create Account
+              </Button>
+              <Button type="submit">Sign In</Button>
+            </div>
           </form>
         </Form>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="link" className="px-0">
-          Create Account
-        </Button>
-        <Button type="submit">Sign In</Button>
-      </CardFooter>
     </Card>
   );
 };
