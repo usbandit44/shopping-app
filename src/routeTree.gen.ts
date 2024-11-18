@@ -12,9 +12,10 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SignupImport } from './routes/signup'
-import { Route as ApplicationImport } from './routes/_application'
+import { Route as BuyerImport } from './routes/_buyer'
 import { Route as IndexImport } from './routes/index'
-import { Route as ApplicationDiscoverImport } from './routes/_application.discover'
+import { Route as BuyerLikedIndexImport } from './routes/_buyer.liked.index'
+import { Route as BuyerDiscoverIndexImport } from './routes/_buyer.discover.index'
 
 // Create/Update Routes
 
@@ -24,8 +25,8 @@ const SignupRoute = SignupImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ApplicationRoute = ApplicationImport.update({
-  id: '/_application',
+const BuyerRoute = BuyerImport.update({
+  id: '/_buyer',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -35,10 +36,16 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ApplicationDiscoverRoute = ApplicationDiscoverImport.update({
-  id: '/discover',
-  path: '/discover',
-  getParentRoute: () => ApplicationRoute,
+const BuyerLikedIndexRoute = BuyerLikedIndexImport.update({
+  id: '/liked/',
+  path: '/liked/',
+  getParentRoute: () => BuyerRoute,
+} as any)
+
+const BuyerDiscoverIndexRoute = BuyerDiscoverIndexImport.update({
+  id: '/discover/',
+  path: '/discover/',
+  getParentRoute: () => BuyerRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -52,11 +59,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/_application': {
-      id: '/_application'
+    '/_buyer': {
+      id: '/_buyer'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof ApplicationImport
+      preLoaderRoute: typeof BuyerImport
       parentRoute: typeof rootRoute
     }
     '/signup': {
@@ -66,70 +73,86 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
-    '/_application/discover': {
-      id: '/_application/discover'
+    '/_buyer/discover/': {
+      id: '/_buyer/discover/'
       path: '/discover'
       fullPath: '/discover'
-      preLoaderRoute: typeof ApplicationDiscoverImport
-      parentRoute: typeof ApplicationImport
+      preLoaderRoute: typeof BuyerDiscoverIndexImport
+      parentRoute: typeof BuyerImport
+    }
+    '/_buyer/liked/': {
+      id: '/_buyer/liked/'
+      path: '/liked'
+      fullPath: '/liked'
+      preLoaderRoute: typeof BuyerLikedIndexImport
+      parentRoute: typeof BuyerImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface ApplicationRouteChildren {
-  ApplicationDiscoverRoute: typeof ApplicationDiscoverRoute
+interface BuyerRouteChildren {
+  BuyerDiscoverIndexRoute: typeof BuyerDiscoverIndexRoute
+  BuyerLikedIndexRoute: typeof BuyerLikedIndexRoute
 }
 
-const ApplicationRouteChildren: ApplicationRouteChildren = {
-  ApplicationDiscoverRoute: ApplicationDiscoverRoute,
+const BuyerRouteChildren: BuyerRouteChildren = {
+  BuyerDiscoverIndexRoute: BuyerDiscoverIndexRoute,
+  BuyerLikedIndexRoute: BuyerLikedIndexRoute,
 }
 
-const ApplicationRouteWithChildren = ApplicationRoute._addFileChildren(
-  ApplicationRouteChildren,
-)
+const BuyerRouteWithChildren = BuyerRoute._addFileChildren(BuyerRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '': typeof ApplicationRouteWithChildren
+  '': typeof BuyerRouteWithChildren
   '/signup': typeof SignupRoute
-  '/discover': typeof ApplicationDiscoverRoute
+  '/discover': typeof BuyerDiscoverIndexRoute
+  '/liked': typeof BuyerLikedIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '': typeof ApplicationRouteWithChildren
+  '': typeof BuyerRouteWithChildren
   '/signup': typeof SignupRoute
-  '/discover': typeof ApplicationDiscoverRoute
+  '/discover': typeof BuyerDiscoverIndexRoute
+  '/liked': typeof BuyerLikedIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/_application': typeof ApplicationRouteWithChildren
+  '/_buyer': typeof BuyerRouteWithChildren
   '/signup': typeof SignupRoute
-  '/_application/discover': typeof ApplicationDiscoverRoute
+  '/_buyer/discover/': typeof BuyerDiscoverIndexRoute
+  '/_buyer/liked/': typeof BuyerLikedIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/signup' | '/discover'
+  fullPaths: '/' | '' | '/signup' | '/discover' | '/liked'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/signup' | '/discover'
-  id: '__root__' | '/' | '/_application' | '/signup' | '/_application/discover'
+  to: '/' | '' | '/signup' | '/discover' | '/liked'
+  id:
+    | '__root__'
+    | '/'
+    | '/_buyer'
+    | '/signup'
+    | '/_buyer/discover/'
+    | '/_buyer/liked/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ApplicationRoute: typeof ApplicationRouteWithChildren
+  BuyerRoute: typeof BuyerRouteWithChildren
   SignupRoute: typeof SignupRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ApplicationRoute: ApplicationRouteWithChildren,
+  BuyerRoute: BuyerRouteWithChildren,
   SignupRoute: SignupRoute,
 }
 
@@ -146,25 +169,30 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/_application",
+        "/_buyer",
         "/signup"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/_application": {
-      "filePath": "_application.tsx",
+    "/_buyer": {
+      "filePath": "_buyer.tsx",
       "children": [
-        "/_application/discover"
+        "/_buyer/discover/",
+        "/_buyer/liked/"
       ]
     },
     "/signup": {
       "filePath": "signup.tsx"
     },
-    "/_application/discover": {
-      "filePath": "_application.discover.tsx",
-      "parent": "/_application"
+    "/_buyer/discover/": {
+      "filePath": "_buyer.discover.index.tsx",
+      "parent": "/_buyer"
+    },
+    "/_buyer/liked/": {
+      "filePath": "_buyer.liked.index.tsx",
+      "parent": "/_buyer"
     }
   }
 }

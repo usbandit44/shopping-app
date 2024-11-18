@@ -4,6 +4,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const Header = () => {
+    
   return (
     <div className="fixed top-0 left-0 w-screen h-16 bg-stone-200 flex justify-center items-center gap-5">
       <Button variant="link">Discover</Button>
