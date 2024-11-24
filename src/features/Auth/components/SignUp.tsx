@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const SignUp = () => {
   const navigate = useNavigate({ from: "/signup" });
@@ -41,6 +42,7 @@ const SignUp = () => {
       birthdate: "",
       number: "",
       address: "",
+      user: "customer",
     },
   });
 
@@ -144,6 +146,35 @@ const SignUp = () => {
                       placeholder="Address"
                       {...field}
                     />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="user"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>User Type</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-col space-y-1"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="customer" />
+                        </FormControl>
+                        <FormLabel className="font-normal">Customer</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="seller" />
+                        </FormControl>
+                        <FormLabel className="font-normal">Seller</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
                   </FormControl>
                 </FormItem>
               )}

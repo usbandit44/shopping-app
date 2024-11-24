@@ -1,14 +1,14 @@
 import React from "react";
 
-const LikedPage = () => {
+const AddPage = () => {
   return (
     <div
-      id="liked_page"
       className="relative flex flex-wrap justify-center gap-5 top-16 p-10"
+      id="add_page"
     >
-      LikedPage
+      AddPage
     </div>
   );
 };
 
-export default LikedPage;
+export default AddPage;
