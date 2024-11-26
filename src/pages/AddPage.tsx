@@ -1,3 +1,4 @@
+import AddItemForm from "@/features/Add/components/AddItemForm/AddItemForm";
 import React from "react";
 
 const AddPage = () => {
@@ -6,7 +7,7 @@ const AddPage = () => {
       className="relative flex flex-wrap justify-center gap-5 top-16 p-10"
       id="add_page"
     >
-      AddPage
+      <AddItemForm />
     </div>
   );
 };
