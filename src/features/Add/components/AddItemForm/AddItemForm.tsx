@@ -25,10 +25,39 @@ const AddItemForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof item_form>) {
+  async function onSubmit(values: z.infer<typeof item_form>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    try {
+      const response = await fetch("http://localhost:3000/addItem/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: values.name,
+          desc: values.desc,
+          size: values.size,
+          price: values.price,
+          image: values.image,
+          s_id: localStorage.getItem("id"),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Error:", error.message);
+      } else {
+        console.error("An unknown error occurred");
+      }
+    }
   }
   return (
     <Card className="h-fit w-[60vw] p-10">

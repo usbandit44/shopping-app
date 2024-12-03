@@ -42,12 +42,48 @@ const SignUp = () => {
       birthdate: "",
       number: "",
       address: "",
-      user: "customer",
+      user: "buyer",
     },
   });
 
-  function onSubmit(values: z.infer<typeof signup_form>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof signup_form>) {
+    try {
+      const response = await fetch("http://localhost:3000/signup/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: values.name,
+          username: values.username,
+          password: values.password,
+          birthday: values.birthdate,
+          phoneNumber: values.number,
+          address: values.address,
+          type: values.user,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      localStorage.setItem("id", result.id);
+      if (values.user === "buyer") {
+        localStorage.setItem("type", "buyer");
+        navigate({ to: "/discover" });
+      } else if (values.user === "seller") {
+        localStorage.setItem("type", "seller");
+        navigate({ to: "/shop" });
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Error:", error.message);
+      } else {
+        console.error("An unknown error occurred");
+      }
+    }
   }
 
   return (
@@ -164,7 +200,7 @@ const SignUp = () => {
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="customer" />
+                          <RadioGroupItem value="buyer" />
                         </FormControl>
                         <FormLabel className="font-normal">Customer</FormLabel>
                       </FormItem>

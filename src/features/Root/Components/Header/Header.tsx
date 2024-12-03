@@ -53,8 +53,8 @@ const Header = () => {
         setCurrentPage("liked");
         break;
       case "cart":
-        navigate({ from: "/cart", to: "/discover" });
-        setCurrentPage("discover");
+        navigate({ from: "/cart", to: "/liked" });
+        setCurrentPage("liked");
         break;
     }
   };
